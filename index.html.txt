@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Quy trình làm hoa giấy thanh tiên</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-cream: #FFF8EA;
+      --bg-card: #FFFDF9;
+      --wood-dark: #5C3824;
+      --wood-mid: #9C6644;
+      --wood-light: #E6CCB2;
+      --bamboo-dark: #3F702C;
+      --bamboo-light: #8AC926;
+      --coral-red: #E65C4F;
+      --gold-yellow: #F4A226;
+      --royal-blue: #2563EB;
+      --lotus-pink: #F27999;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background-color: var(--bg-cream);
+      background-image:
+        radial-gradient(#E8D7B9 1.6px, transparent 1.6px),
+        radial-gradient(#E8D7B9 1.6px, #FFF8EA 1.6px);
+      background-size: 30px 30px;
+      background-position: 0 0, 15px 15px;
+      color: var(--wood-dark);
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    h1, h2, h3, .font-title {
+      font-family: 'Baloo 2', cursive, sans-serif;
+    }
+
+    /* Nút đồ chơi bo tròn 3D */
+    .toy-btn {
+      transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease;
+      box-shadow: 0 5px 0 var(--wood-dark), 0 8px 16px rgba(92, 56, 36, 0.18);
+      border: 3px solid var(--wood-dark);
+    }
+    .toy-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 7px 0 var(--wood-dark), 0 10px 20px rgba(92, 56, 36, 0.24);
+    }
+    .toy-btn:active:not(:disabled) {
+      transform: translateY(4px);
+      box-shadow: 0 1px 0 var(--wood-dark), 0 3px 6px rgba(92, 56, 36, 0.18);
+    }
+    .toy-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      box-shadow: 0 2px 0 var(--wood-dark);
+    }
+
+    /* Khung thẻ chính */
+    .toy-panel {
+      background: var(--bg-card);
+      border: 3.5px solid var(--wood-dark);
+      box-shadow: 0 8px 0 rgba(92, 56, 36, 0.16), 0 14px 28px rgba(92, 56, 36, 0.12);
+      border-radius: 30px;
+    }
+
+    /* Hộp giải thích kiến thức mỗi bước */
+    .lore-box {
+      background: linear-gradient(135deg, #FFF5DB 0%, #FFECC4 100%);
+      border: 2.5px solid #D4A373;
+      border-radius: 20px;
+    }
+
+    /* Hiệu ứng nhún nhẹ kiểu đồ chơi */
+    @keyframes floatToy {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-5px) rotate(1deg); }
+    }
+    .animate-float-toy {
+      animation: floatToy 3.2s ease-in-out infinite;
+    }
+
+    @keyframes pulseHint {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
+    .animate-hint {
+      animation: pulseHint 1.4s ease-in-out infinite;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.35) rotate(-8deg); opacity: 0; }
+      75% { transform: scale(1.08) rotate(2deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    .animate-pop {
+      animation: popIn 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    @keyframes shakeWood {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px) rotate(-2deg); }
+      75% { transform: translateX(6px) rotate(2deg); }
+    }
+    .animate-shake {
+      animation: shakeWood 0.3s ease-in-out;
+    }
+
+    /* Chuyển động sống động cho cảnh Chibi cuối game */
+    @keyframes chibiBobLeft {
+      0%, 100% { transform: translate(185px, 222px) rotate(0deg); }
+      50% { transform: translate(185px, 217px) rotate(-1.5deg); }
+    }
+    @keyframes chibiBobCenter {
+      0%, 100% { transform: translate(295px, 208px) rotate(0deg); }
+      50% { transform: translate(295px, 203px) rotate(1.2deg); }
+    }
+    @keyframes chibiBobRight {
+      0%, 100% { transform: translate(425px, 218px) rotate(0deg); }
+      50% { transform: translate(425px, 213px) rotate(1.5deg); }
+    }
+    @keyframes flowerSway {
+      0%, 100% { transform: rotate(-2deg); }
+      50% { transform: rotate(2.5deg); }
+    }
+    .chibi-left-anim {
+      animation: chibiBobLeft 2.6s ease-in-out infinite;
+    }
+    .chibi-center-anim {
+      animation: chibiBobCenter 3.1s ease-in-out infinite;
+    }
+    .chibi-right-anim {
+      animation: chibiBobRight 2.8s ease-in-out infinite;
+    }
+    .flower-sway-anim {
+      transform-box: fill-box;
+      transform-origin: bottom center;
+      animation: flowerSway 3.4s ease-in-out infinite;
+    }
+
+    /* Hiệu ứng hạt rơi */
+    .particle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 60;
+      animation: particleFall 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+    @keyframes particleFall {
+      0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
+      100% { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(0.6); opacity: 0; }
+    }
+
+    .interactive-zone {
+      touch-action: none;
+    }
+  </style>
+</head>
+<body class="flex flex-col items-center justify-between p-3 sm:p-5">
+
+  <!-- Thanh điều hướng & tiến trình 5 bước -->
+  <header id="top-bar" class="w-full max-w-4xl flex items-center justify-between gap-2 mb-3 hidden">
+    <button onclick="goHome()" class="toy-btn bg-[#F4E1C1] text-[#5C3824] px-3 py-2 rounded-2xl font-bold text-xs sm:text-sm flex items-center gap-1 shrink-0">
+      <span>🏠</span>
+      <span class="hidden sm:inline">Trang đầu</span>
+    </button>
+
+    <!-- Thanh tiến trình 5 bước -->
+    <div class="flex-1 bg-[#EFE2C6] border-2 border-[#5C3824] rounded-2xl p-1 flex items-center justify-between gap-1 shadow-inner overflow-x-auto">
+      <div id="prog-1" class="flex-1 text-center py-1 px-1 rounded-xl text-[11px] sm:text-xs font-bold transition-all bg-[#8AC926] text-white whitespace-nowrap">
+        1. Tre & Giấy
+      </div>
+      <div id="prog-2" class="flex-1 text-center py-1 px-1 rounded-xl text-[11px] sm:text-xs font-bold transition-all text-[#5C3824]/60 whitespace-nowrap">
+        2. Nhuộm màu
+      </div>
+      <div id="prog-3" class="flex-1 text-center py-1 px-1 rounded-xl text-[11px] sm:text-xs font-bold transition-all text-[#5C3824]/60 whitespace-nowrap">
+        3. Ép khuôn
+      </div>
+      <div id="prog-4" class="flex-1 text-center py-1 px-1 rounded-xl text-[11px] sm:text-xs font-bold transition-all text-[#5C3824]/60 whitespace-nowrap">
+        4. Táng chần
+      </div>
+    <button id="sound-btn" onclick="unlockAndTestSound()" class="toy-btn bg-[#F4E1C1] text-[#5C3824] px-3 py-2 rounded-2xl font-bold text-xs sm:text-sm shrink-0 flex items-center gap-1.5" title="Bật âm thanh / Test tiếng">
+      <span id="sound-icon-top">🔊</span>
+      <span id="sound-label-top" class="hidden sm:inline">Test tiếng</span>
+    </button>
+  </header>
+
+  <!-- Vùng sân khấu chính -->
+  <main class="w-full max-w-4xl flex-1 flex items-center justify-center">
+
+    <!-- ==================== MÀN HÌNH 0: TIÊU ĐỀ CHÍNH ==================== -->
+    <section id="screen-title" class="toy-panel w-full p-5 sm:p-8 text-center relative overflow-hidden">
+      <div class="flex flex-wrap justify-between items-center gap-2 mb-2">
+        <span class="inline-flex items-center gap-1.5 bg-[#E7F4D8] border-2 border-[#3F702C] text-[#2F5720] px-3.5 py-1 rounded-full text-xs sm:text-sm font-bold">
+          🌸 Làng nghề truyền thống hơn 300 năm xứ Huế
+        </span>
+        <button onclick="unlockAndTestSound()" id="sound-btn-home" class="toy-btn bg-[#FDE68A] text-[#5C3824] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-1.5">
+          <span id="sound-icon-home">🔊</span>
+          <span id="sound-label-home">Bật âm thanh / Test tiếng</span>
+        </button>
+      </div>
+      <div id="audio-status-banner" class="text-xs font-bold text-[#3F702C] mb-1 min-h-[18px]">
+        💡 Nhấn "Bật âm thanh / Test tiếng" hoặc "Bắt đầu" để kích hoạt âm thanh trên trình duyệt
+      </div>
+
+      <!-- Tiêu đề chính theo đúng yêu cầu -->
+      <h1 class="font-title text-3xl sm:text-5xl font-extrabold text-[#5C3824] tracking-tight mt-2 mb-1 drop-shadow-sm">
+        Quy trình làm hoa giấy thanh tiên
+      </h1>
+      <p class="text-sm sm:text-base font-bold text-[#BC6C4D] mb-3">
+        Trò chơi trải nghiệm thủ công dễ thương – Khám phá tinh hoa làng Thanh Tiên, Huế
+      </p>
+
+      <!-- Hình minh họa cây hoa giấy Thanh Tiên cắm cốt rơm nhiều màu (lấy cảm hứng từ ảnh 1) -->
+      <div class="w-full max-w-md mx-auto my-2 animate-float-toy">
+        <svg viewBox="0 0 360 320" class="w-full h-auto drop-shadow-md">
+          <!-- Khung nền tròn ấm áp -->
+          <circle cx="180" cy="155" r="138" fill="#FDF1D4" stroke="#E6CCB2" stroke-width="5" stroke-dasharray="10 6"/>
+
+          <!-- Thân cây tre & bó cốt rơm ("cây chông") ở dưới -->
+          <g stroke="#5C3824" stroke-width="3.5" stroke-linejoin="round">
+            <!-- Cán tre dài -->
+            <rect x="174" y="210" width="12" height="98" rx="5" fill="#C9A26B"/>
+            <!-- Dây lạt buộc rơm -->
+            <path d="M164 252 Q180 260 196 252" fill="none" stroke="#8C5A32" stroke-width="4.5" stroke-linecap="round"/>
+            <path d="M174 256 L156 268 M186 256 L204 268" stroke="#D4A373" stroke-width="3.5" stroke-linecap="round"/>
+            <!-- Bó cốt rơm vàng ươm -->
+            <path d="M158 145 L202 145 L196 226 L164 226 Z" fill="#E9C46A"/>
+            <line x1="168" y1="148" x2="170" y2="224" stroke="#B68D40" stroke-width="2"/>
+            <line x1="180" y1="148" x2="180" y2="224" stroke="#B68D40" stroke-width="2"/>
+            <line x1="192" y1="148" x2="190" y2="224" stroke="#B68D40" stroke-width="2"/>
+          </g>
+
+          <!-- Các nan tre xanh xòe ra xung quanh -->
+          <g stroke="#3F702C" stroke-width="3.5" stroke-linecap="round">
+            <line x1="180" y1="150" x2="180" y2="26"/>
+            <line x1="180" y1="150" x2="125" y2="42"/>
+            <line x1="180" y1="150" x2="235" y2="42"/>
+            <line x1="180" y1="150" x2="82" y2="85"/>
+            <line x1="180" y1="150" x2="278" y2="85"/>
+            <line x1="180" y1="150" x2="68" y2="145"/>
+            <line x1="180" y1="150" x2="292" y2="145"/>
+            <line x1="180" y1="155" x2="90" y2="198"/>
+            <line x1="180" y1="155" x2="270" y2="198"/>
+          </g>
+
+          <!-- Lá tre xanh nhọn xen kẽ -->
+          <g fill="#52B788" stroke="#2D6A4F" stroke-width="2">
+            <path d="M168 48 L156 26 L176 44 Z"/>
+            <path d="M192 48 L204 26 L184 44 Z"/>
+            <path d="M106 86 L82 68 L112 78 Z"/>
+            <path d="M254 86 L278 68 L248 78 Z"/>
+            <path d="M88 148 L60 144 L90 138 Z"/>
+            <path d="M272 148 L300 144 L270 138 Z"/>
+          </g>
+
+          <!-- Các nụ hoa đỏ & hoa nhỏ nhụy bạc xung quanh -->
+          <g stroke="#5C3824" stroke-width="2.5">
+            <!-- Nụ đỏ đầu cành -->
+            <path d="M180 18 L172 34 L188 34 Z" fill="#E63946"/>
+            <path d="M123 35 L114 50 L130 52 Z" fill="#E63946"/>
+            <path d="M237 35 L230 52 L246 50 Z" fill="#E63946"/>
+            <path d="M78 80 L68 94 L84 96 Z" fill="#E63946"/>
+            <path d="M282 80 L276 96 L292 94 Z" fill="#E63946"/>
+            <path d="M62 144 L50 154 L66 158 Z" fill="#E63946"/>
+            <path d="M298 144 L294 158 L310 154 Z" fill="#E63946"/>
+
+            <!-- Bông hoa vàng rực rỡ -->
+            <g transform="translate(178, 72)">
+              <circle r="18" fill="#FFB703"/>
+              <circle r="11" fill="#FB8500"/>
+              <circle r="5" fill="#E5E7EB"/>
+            </g>
+            <g transform="translate(132, 118)">
+              <circle r="16" fill="#FFB703"/>
+              <circle r="9" fill="#FB8500"/>
+              <circle r="4" fill="#E5E7EB"/>
+            </g>
+            <g transform="translate(228, 118)">
+              <circle r="16" fill="#FFB703"/>
+              <circle r="9" fill="#FB8500"/>
+              <circle r="4" fill="#E5E7EB"/>
+            </g>
+            <g transform="translate(116, 178)">
+              <circle r="15" fill="#FFB703"/>
+              <circle r="8" fill="#FB8500"/>
+              <circle r="4" fill="#E5E7EB"/>
+            </g>
+            <g transform="translate(242, 178)">
+              <circle r="15" fill="#FFB703"/>
+              <circle r="8" fill="#FB8500"/>
+              <circle r="4" fill="#E5E7EB"/>
+            </g>
+
+            <!-- Bông hoa đỏ nhụy xanh / bạc đặc trưng ảnh 1 -->
+            <g transform="translate(180, 118)">
+              <circle r="24" fill="#E63946"/>
+              <circle r="12" fill="#2563EB"/>
+              <circle r="6" fill="#F8FAFC"/>
+            </g>
+            <g transform="translate(148, 158)">
+              <circle r="18" fill="#E63946"/>
+              <circle r="7" fill="#F8FAFC"/>
+            </g>
+            <g transform="translate(212, 158)">
+              <circle r="18" fill="#E63946"/>
+              <circle r="7" fill="#F8FAFC"/>
+            </g>
+
+            <!-- Bông hoa xanh dương & xanh lá nhụy bạc -->
+            <g transform="translate(142, 82)">
+              <circle r="13" fill="#2563EB"/>
+              <circle r="5" fill="#F8FAFC"/>
+            </g>
+            <g transform="translate(218, 82)">
+              <circle r="13" fill="#2563EB"/>
+              <circle r="5" fill="#F8FAFC"/>
+            </g>
+            <g transform="translate(178, 188)">
+              <circle r="16" fill="#2A9D8F"/>
+              <circle r="6" fill="#F8FAFC"/>
+            </g>
+            <g transform="translate(96, 122)">
+              <circle r="13" fill="#2563EB"/>
+              <circle r="5" fill="#F8FAFC"/>
+            </g>
+            <g transform="translate(264, 122)">
+              <circle r="13" fill="#2563EB"/>
+              <circle r="5" fill="#F8FAFC"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+
+      <p class="text-sm sm:text-base text-[#5C3824]/90 max-w-xl mx-auto mb-5 font-semibold leading-relaxed">
+        Tự tay trải nghiệm đủ <b>5 công đoạn thủ công</b> của nghệ nhân làng Thanh Tiên và tìm hiểu câu chuyện văn hóa ẩn sau từng cành hoa giấy xứ Huế!
+      </p>
+
+      <button onclick="startGame()" class="toy-btn bg-[#E65C4F] hover:bg-[#d64c3f] text-white font-title text-2xl sm:text-3xl font-extrabold px-12 py-3.5 rounded-3xl tracking-wide animate-hint">
+        ▶ Bắt đầu
+      </button>
+    </section>
+
+    <!-- ==================== BƯỚC 1: CHỌN & VÓT TRE LÀM XƯƠNG SỐNG ==================== -->
+    <section id="screen-step-1" class="toy-panel w-full p-4 sm:p-6 hidden">
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-wider text-[#3F702C] bg-[#E7F4D8] px-3 py-1 rounded-full">Bước 1 / 5 • Chuẩn bị cốt cành</span>
+          <h2 class="font-title text-2xl sm:text-3xl font-bold mt-1">Chẻ & Vót Tre Lồ Ô Làm Cành</h2>
+        </div>
+        <div class="bg-[#F4E1C1] border-2 border-[#5C3824] px-3.5 py-1.5 rounded-2xl font-bold text-sm">
+          Nan tre đã vót: <span id="bamboo-count" class="text-[#3F702C] text-base">0 / 3</span>
+        </div>
+      </div>
+
+      <!-- Khung giải thích chi tiết của Bước 1 -->
+      <div class="lore-box p-3 sm:p-3.5 mb-3 text-xs sm:text-sm leading-relaxed">
+        <div class="font-bold text-[#5C3824] mb-0.5 flex items-center gap-1.5">
+          <span>📖</span> <span>Giải thích quy trình làng nghề:</span>
+        </div>
+        <p class="text-[#5C3824]/90">
+          Tre chính là <b>"xương sống"</b> của cành hoa giấy Thanh Tiên. Nghệ nhân phải chọn loại <b>tre lồ ô già, thân thẳng, không sâu bệnh</b>; sau đó chẻ nhỏ, vót tròn nhẵn và phơi nắng thật khô để cành có độ dẻo dai, dễ uốn cong mềm mại và giữ bền suốt cả năm không mối mọt.
+        </p>
+      </div>
+
+      <p class="text-sm font-bold text-[#3F702C] mb-2">
+        👉 Thao tác: Kéo (vuốt) con dao nhỏ qua ống tre <b>3 lần</b> (hoặc chạm vào ống tre) để vót thành bó nan tre mảnh!
+      </p>
+
+      <!-- Sân chơi vót tre -->
+      <div id="bamboo-zone" class="interactive-zone relative w-full h-56 sm:h-64 bg-[#FAF0D7] border-3 border-dashed border-[#9C6644] rounded-3xl flex items-center justify-center overflow-hidden cursor-pointer">
+        <div id="swipe-guide-1" class="absolute top-3 left-1/2 -translate-x-1/2 bg-white/95 border-2 border-[#5C3824] px-3 py-1 rounded-full text-xs font-bold text-[#5C3824] pointer-events-none">
+          ↔ Vuốt ngang qua thân tre để vót nan
+        </div>
+
+        <svg viewBox="0 0 420 220" class="w-full max-w-md h-full pointer-events-none">
+          <ellipse cx="210" cy="195" rx="140" ry="13" fill="#5C3824" opacity="0.12"/>
+
+          <!-- Ống tre lồ ô -->
+          <g id="raw-bamboo" stroke="#3F702C" stroke-width="4" stroke-linejoin="round">
+            <rect x="115" y="38" width="52" height="145" rx="12" fill="#70B01C"/>
+            <ellipse cx="141" cy="40" rx="26" ry="8" fill="#D8E2B8"/>
+            <line x1="115" y1="88" x2="167" y2="88" stroke-width="5"/>
+            <line x1="115" y1="140" x2="167" y2="140" stroke-width="5"/>
+            <path id="splinter-left" d="M115 88 Q88 115 80 150 L94 153 Q102 122 115 102 Z" fill="#A7C957" opacity="0.35"/>
+            <path id="splinter-right" d="M167 84 Q194 112 202 146 L188 150 Q180 118 167 98 Z" fill="#A7C957" opacity="0.35"/>
+          </g>
+
+          <!-- Bó nan tre đã vót tròn nhẵn -->
+          <g id="finished-bamboo" opacity="0.25" transform="translate(228, 44)">
+            <g stroke="#2F5720" stroke-width="3">
+              <rect x="8" y="8" width="11" height="132" rx="5.5" fill="#8AC926" transform="rotate(-8 14 72)"/>
+              <rect x="26" y="4" width="11" height="136" rx="5.5" fill="#70B01C" transform="rotate(-2 32 72)"/>
+              <rect x="44" y="4" width="11" height="136" rx="5.5" fill="#8AC926" transform="rotate(3 50 72)"/>
+              <rect x="62" y="8" width="11" height="132" rx="5.5" fill="#70B01C" transform="rotate(9 68 72)"/>
+              <rect x="6" y="70" width="70" height="12" rx="6" fill="#E9C46A" stroke="#5C3824"/>
+            </g>
+          </g>
+        </svg>
+
+        <!-- Dao vót tre chibi -->
+        <div id="whittle-knife" class="absolute right-6 bottom-5 w-24 sm:w-28 cursor-grab active:cursor-grabbing drop-shadow-lg">
+          <svg viewBox="0 0 140 80" class="w-full h-auto pointer-events-none">
+            <path d="M14 42 Q35 22 72 28 L72 50 Q32 54 14 42 Z" fill="#E5E7EB" stroke="#4B5563" stroke-width="3.5" stroke-linejoin="round"/>
+            <path d="M22 41 Q42 32 68 34" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+            <rect x="68" y="24" width="60" height="30" rx="14" fill="#9C6644" stroke="#5C3824" stroke-width="4"/>
+            <circle cx="84" cy="39" r="3.5" fill="#F4E1C1"/>
+            <circle cx="110" cy="39" r="3.5" fill="#F4E1C1"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="mt-4 flex justify-end">
+        <button id="next-step-1" onclick="goToStep(2)" disabled class="toy-btn bg-[#8AC926] text-white font-bold px-7 py-3 rounded-2xl w-full sm:w-auto">
+          Tiếp tục sang Bước 2 ➔
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================== BƯỚC 2: NHUỘM MÀU GIẤY TỪ THIÊN NHIÊN ==================== -->
+    <section id="screen-step-2" class="toy-panel w-full p-4 sm:p-6 hidden">
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-wider text-[#E65C4F] bg-[#FDE4E1] px-3 py-1 rounded-full">Bước 2 / 5 • Nhuộm sắc thảo mộc</span>
+          <h2 class="font-title text-2xl sm:text-3xl font-bold mt-1">Nhuộm Màu Giấy Dó Thủ Công</h2>
+        </div>
+        <div class="bg-[#F4E1C1] border-2 border-[#5C3824] px-3.5 py-1.5 rounded-2xl font-bold text-sm">
+          Giấy đã nhuộm: <span id="dye-count" class="text-[#E65C4F] text-base">0 / 4</span>
+        </div>
+      </div>
+
+      <!-- Khung giải thích chi tiết của Bước 2 -->
+      <div class="lore-box p-3 sm:p-3.5 mb-3 text-xs sm:text-sm leading-relaxed">
+        <div class="font-bold text-[#5C3824] mb-0.5 flex items-center gap-1.5">
+          <span>📖</span> <span>Giải thích quy trình làng nghề:</span>
+        </div>
+        <p class="text-[#5C3824]/90">
+          Giấy làm hoa là loại <b>giấy dó mỏng, bền, nhẹ và thấm hút tốt</b>. Sắc màu của hoa Thanh Tiên hoàn toàn chiết xuất từ <b>thiên nhiên</b> (nhựa cây, lá cây, vỏ quả, hạt dành dành, mồng tơi...) pha chế theo bí quyết gia truyền. Thời gian ngâm và độ ấm của nước quyết định sắc độ đậm nhạt, giúp hoa rực rỡ mà không phai màu theo thời gian.
+        </p>
+      </div>
+
+      <p class="text-sm font-bold text-[#E65C4F] mb-2">
+        👉 Thao tác: Chọn <b>1 chén màu thiên nhiên</b> bên dưới, rồi chạm vào <b>4 tờ giấy trắng</b> để nhuộm đủ bộ màu!
+      </p>
+
+      <!-- 4 chén màu tự nhiên -->
+      <div class="grid grid-cols-4 gap-2 sm:gap-3 mb-3">
+        <button onclick="selectDye('red')" id="dye-btn-red" class="toy-btn bg-[#FDE4E1] ring-4 ring-[#5C3824] p-2 rounded-2xl flex flex-col items-center text-center">
+          <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-[#E63946] border-3 border-[#5C3824] shadow-inner mb-1"></div>
+          <span class="font-bold text-xs">Đỏ nhựa cây</span>
+        </button>
+
+        <button onclick="selectDye('yellow')" id="dye-btn-yellow" class="toy-btn bg-[#FEF3C7] p-2 rounded-2xl flex flex-col items-center text-center">
+          <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-[#FFB703] border-3 border-[#5C3824] shadow-inner mb-1"></div>
+          <span class="font-bold text-xs">Vàng vỏ quả</span>
+        </button>
+
+        <button onclick="selectDye('blue')" id="dye-btn-blue" class="toy-btn bg-[#DBEAFE] p-2 rounded-2xl flex flex-col items-center text-center">
+          <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-[#2563EB] border-3 border-[#5C3824] shadow-inner mb-1"></div>
+          <span class="font-bold text-xs">Xanh lá chàm</span>
+        </button>
+
+        <button onclick="selectDye('pink')" id="dye-btn-pink" class="toy-btn bg-[#FCE7F3] p-2 rounded-2xl flex flex-col items-center text-center">
+          <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-[#F27999] border-3 border-[#5C3824] shadow-inner mb-1"></div>
+          <span class="font-bold text-xs">Hồng cánh sen</span>
+        </button>
+      </div>
+
+      <!-- 4 tờ giấy trắng cần nhuộm -->
+      <div class="bg-[#FAF0D7] border-3 border-dashed border-[#9C6644] rounded-3xl p-3 sm:p-5 grid grid-cols-2 sm:grid-cols-4 gap-3 items-center justify-items-center">
+        <button onclick="dyePaper(0)" id="paper-sheet-0" class="w-full max-w-[125px] aspect-[4/3] bg-white border-3 border-[#5C3824] rounded-2xl shadow-md flex flex-col items-center justify-center p-2 transition-transform hover:scale-105">
+          <span class="text-xl mb-0.5">📄</span>
+          <span class="text-xs font-bold text-center">Tờ giấy 1</span>
+        </button>
+        <button onclick="dyePaper(1)" id="paper-sheet-1" class="w-full max-w-[125px] aspect-[4/3] bg-white border-3 border-[#5C3824] rounded-2xl shadow-md flex flex-col items-center justify-center p-2 transition-transform hover:scale-105">
+          <span class="text-xl mb-0.5">📄</span>
+          <span class="text-xs font-bold text-center">Tờ giấy 2</span>
+        </button>
+        <button onclick="dyePaper(2)" id="paper-sheet-2" class="w-full max-w-[125px] aspect-[4/3] bg-white border-3 border-[#5C3824] rounded-2xl shadow-md flex flex-col items-center justify-center p-2 transition-transform hover:scale-105">
+          <span class="text-xl mb-0.5">📄</span>
+          <span class="text-xs font-bold text-center">Tờ giấy 3</span>
+        </button>
+        <button onclick="dyePaper(3)" id="paper-sheet-3" class="w-full max-w-[125px] aspect-[4/3] bg-white border-3 border-[#5C3824] rounded-2xl shadow-md flex flex-col items-center justify-center p-2 transition-transform hover:scale-105">
+          <span class="text-xl mb-0.5">📄</span>
+          <span class="text-xs font-bold text-center">Tờ giấy 4</span>
+        </button>
+      </div>
+
+      <div class="mt-4 flex justify-end">
+        <button id="next-step-2" onclick="goToStep(3)" disabled class="toy-btn bg-[#8AC926] text-white font-bold px-7 py-3 rounded-2xl w-full sm:w-auto">
+          Tiếp tục sang Bước 3 ➔
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================== BƯỚC 3: CẮT & ÉP KHUÔN GỖ TẠO NẾP ==================== -->
+    <section id="screen-step-3" class="toy-panel w-full p-4 sm:p-6 hidden">
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-wider text-[#D97706] bg-[#FEF3C7] px-3 py-1 rounded-full">Bước 3 / 5 • Tạo hình cánh hoa</span>
+          <h2 class="font-title text-2xl sm:text-3xl font-bold mt-1">Cắt Giấy & Ép Khuôn Gỗ Tạo Nếp</h2>
+        </div>
+        <div id="mold-status-badge" class="bg-[#F4E1C1] border-2 border-[#5C3824] px-3.5 py-1.5 rounded-2xl font-bold text-sm">
+          3A: Cắt cánh hoa
+        </div>
+      </div>
+
+      <!-- Khung giải thích chi tiết của Bước 3 -->
+      <div class="lore-box p-3 sm:p-3.5 mb-3 text-xs sm:text-sm leading-relaxed">
+        <div class="font-bold text-[#5C3824] mb-0.5 flex items-center gap-1.5">
+          <span>📖</span> <span>Giải thích quy trình làng nghề:</span>
+        </div>
+        <p class="text-[#5C3824]/90">
+          Sau khi cắt giấy màu theo từng dáng hoa (cúc, mai, đồng tiền, thược dược, sen...), người thợ dùng <b>khuôn gỗ chạm khắc rãnh</b> ép chặt hoặc dùng tay vuốt tạo nếp gấp. Kỹ thuật ép khuôn giúp cánh hoa có <b>độ phồng, đường gân và độ cong mềm mại tự nhiên</b> thay vì phẳng lì.
+        </p>
+      </div>
+
+      <p id="step3-instruction" class="text-sm font-bold text-[#D97706] mb-2">
+        👉 Thao tác 3A: Bấm vào <b>chiếc kéo</b> 2 lần để cắt cánh hoa theo đường nét đứt!
+      </p>
+
+      <div class="relative w-full h-56 sm:h-64 bg-[#FAF0D7] border-3 border-dashed border-[#9C6644] rounded-3xl flex items-center justify-center overflow-hidden">
+        <svg viewBox="0 0 420 225" class="w-full max-w-md h-full">
+          <rect x="40" y="165" width="340" height="42" rx="14" fill="#DDB892" stroke="#5C3824" stroke-width="4"/>
+
+          <!-- Tờ giấy trước khi cắt -->
+          <g id="uncut-paper-group">
+            <rect x="135" y="34" width="150" height="122" rx="14" fill="#E63946" stroke="#5C3824" stroke-width="4"/>
+            <path id="cut-guide-path" d="M210 54 C225 54 232 74 248 68 C262 62 272 80 258 94 C272 108 262 126 248 120 C232 114 225 134 210 134 C195 134 188 114 172 120 C158 126 148 108 162 94 C148 80 158 62 172 68 C188 74 195 54 210 54 Z"
+                  fill="rgba(255,255,255,0.28)" stroke="#FFFDF7" stroke-width="3.5" stroke-dasharray="7 5"/>
+          </g>
+
+          <!-- Cánh hoa đã cắt & ép gân -->
+          <g id="cut-petal-group" class="hidden" transform="translate(210, 96)">
+            <path d="M0 -48 C18 -48 26 -24 44 -32 C60 -38 72 -18 56 -2 C72 14 60 34 44 28 C26 20 18 44 0 44 C-18 44 -26 20 -44 28 C-60 34 -72 14 -56 -2 C-72 -18 -60 -38 -44 -32 C-26 -24 -18 -48 0 -48 Z"
+                  fill="#E63946" stroke="#5C3824" stroke-width="4"/>
+            <g id="embossed-ribs" opacity="0" stroke="#7F1D1D" stroke-width="2.8" stroke-linecap="round">
+              <line x1="0" y1="0" x2="0" y2="-36"/>
+              <line x1="0" y1="0" x2="34" y2="-22"/>
+              <line x1="0" y1="0" x2="36" y2="16"/>
+              <line x1="0" y1="0" x2="0" y2="34"/>
+              <line x1="0" y1="0" x2="-36" y2="16"/>
+              <line x1="0" y1="0" x2="-34" y2="-22"/>
+            </g>
+          </g>
+        </svg>
+
+        <button id="scissors-tool" onclick="performCut()" class="toy-btn absolute bottom-3.5 left-1/2 -translate-x-1/2 bg-white px-5 py-2 rounded-2xl flex items-center gap-2 font-bold text-sm sm:text-base animate-hint">
+          <span class="text-xl">✂️</span>
+          <span>Cắt theo nét đứt (<span id="cut-progress">0/2</span>)</span>
+        </button>
+
+        <button id="mold-tool" onclick="performPressMold()" class="toy-btn hidden absolute bottom-3.5 left-1/2 -translate-x-1/2 bg-[#9C6644] text-white px-5 py-2 rounded-2xl flex items-center gap-2 font-bold text-sm sm:text-base animate-hint">
+          <span class="text-xl">🪵</span>
+          <span>Ép khuôn gỗ tạo nếp (<span id="mold-progress">0/2</span>)</span>
+        </button>
+      </div>
+
+      <div class="mt-4 flex justify-end">
+        <button id="next-step-3" onclick="goToStep(4)" disabled class="toy-btn bg-[#8AC926] text-white font-bold px-7 py-3 rounded-2xl w-full sm:w-auto">
+          Tiếp tục sang Bước 4 ➔
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================== BƯỚC 4: LÀM TÁNG CHẦN (NHỤY HOA) & GHÉP BÔNG ==================== -->
+    <section id="screen-step-4" class="toy-panel w-full p-4 sm:p-6 hidden">
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-wider text-[#2563EB] bg-[#DBEAFE] px-3 py-1 rounded-full">Bước 4 / 5 • Làm táng chần & ghép bông</span>
+          <h2 class="font-title text-2xl sm:text-3xl font-bold mt-1">Gắn Nhụy Giấy Thiếc Bạc & Xếp Cánh</h2>
+        </div>
+        <div class="bg-[#F4E1C1] border-2 border-[#5C3824] px-3.5 py-1.5 rounded-2xl font-bold text-sm">
+          Hoàn thiện bông: <span id="bloom-assemble-count" class="text-[#2563EB] text-base">0 / 3</span>
+        </div>
+      </div>
+
+      <!-- Khung giải thích chi tiết của Bước 4 -->
+      <div class="lore-box p-3 sm:p-3.5 mb-3 text-xs sm:text-sm leading-relaxed">
+        <div class="font-bold text-[#5C3824] mb-0.5 flex items-center gap-1.5">
+          <span>📖</span> <span>Giải thích quy trình làng nghề:</span>
+        </div>
+        <p class="text-[#5C3824]/90">
+          Phần nhụy ở tâm hoa được gọi là <b>"táng chần"</b>, thường làm từ <b>giấy thiếc bạc lấp lánh</b> hoặc hạt kính nhỏ để tạo điểm bắt sáng, thổi hồn cho bông hoa. Người thợ dùng <b>hồ tự nhiên</b> gắn lần lượt từng lớp cánh, đài hoa, táng chần và cuống tre sao cho tỷ lệ thật cân đối.
+        </p>
+      </div>
+
+      <p class="text-sm font-bold text-[#2563EB] mb-2">
+        👉 Thao tác: Bấm lần lượt <b>3 nút bên dưới</b> để xếp lớp cánh, gắn <b>táng chần nhụy bạc</b> và tra hồ vào cuống tre!
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 items-center">
+        <!-- Bông hoa đang được ghép từng lớp -->
+        <div class="bg-[#FAF0D7] border-3 border-dashed border-[#9C6644] rounded-3xl p-3 flex items-center justify-center h-56">
+          <svg viewBox="0 0 240 220" class="w-48 h-48">
+            <!-- Cuống tre xanh -->
+            <rect x="115" y="110" width="10" height="98" rx="5" fill="#70B01C" stroke="#3F702C" stroke-width="3"/>
+            <!-- Đài lá xanh -->
+            <path id="flower-calyx" d="M120 122 Q92 115 86 130 Q105 135 120 122 Z M120 122 Q148 115 154 130 Q135 135 120 122 Z" fill="#52B788" stroke="#2D6A4F" stroke-width="2.5" opacity="0.25"/>
+
+            <!-- Lớp cánh ngoài màu đỏ -->
+            <g id="layer-outer-petals" opacity="0.25" transform="translate(120, 92)">
+              <circle cx="0" cy="-34" r="24" fill="#E63946" stroke="#5C3824" stroke-width="3"/>
+              <circle cx="32" cy="-10" r="24" fill="#E63946" stroke="#5C3824" stroke-width="3"/>
+              <circle cx="20" cy="28" r="24" fill="#E63946" stroke="#5C3824" stroke-width="3"/>
+              <circle cx="-20" cy="28" r="24" fill="#E63946" stroke="#5C3824" stroke-width="3"/>
+              <circle cx="-32" cy="-10" r="24" fill="#E63946" stroke="#5C3824" stroke-width="3"/>
+            </g>
+
+            <!-- Lớp cánh trong màu xanh dương (giống bông hoa trung tâm ảnh 1) -->
+            <g id="layer-inner-petals" opacity="0" transform="translate(120, 92)">
+              <circle cx="0" cy="-16" r="13" fill="#2563EB" stroke="#5C3824" stroke-width="2.5"/>
+              <circle cx="15" cy="-5" r="13" fill="#2563EB" stroke="#5C3824" stroke-width="2.5"/>
+              <circle cx="9" cy="13" r="13" fill="#2563EB" stroke="#5C3824" stroke-width="2.5"/>
+              <circle cx="-9" cy="13" r="13" fill="#2563EB" stroke="#5C3824" stroke-width="2.5"/>
+              <circle cx="-15" cy="-5" r="13" fill="#2563EB" stroke="#5C3824" stroke-width="2.5"/>
+            </g>
+
+            <!-- Nhụy giấy thiếc bạc lấp lánh (Táng chần) -->
+            <g id="layer-silver-stamen" opacity="0" transform="translate(120, 92)">
+              <circle r="11" fill="#F1F5F9" stroke="#475569" stroke-width="3"/>
+              <circle cx="-3" cy="-3" r="3" fill="#FFFFFF"/>
+              <circle cx="4" cy="2" r="2" fill="#94A3B8"/>
+            </g>
+          </svg>
+        </div>
+
+        <!-- 3 nút công đoạn ghép bông -->
+        <div class="flex flex-col gap-2.5">
+          <button id="btn-assemble-1" onclick="assembleFlowerPart(1)" class="toy-btn bg-[#FDE4E1] text-[#5C3824] font-bold p-3 rounded-2xl text-left flex items-center gap-3 animate-hint">
+            <span class="text-2xl">🌺</span>
+            <div>
+              <div class="text-sm sm:text-base">1. Xếp 2 tầng cánh hoa</div>
+              <div class="text-xs opacity-75">Cánh đỏ ngoài, cánh xanh trong cân đối</div>
+            </div>
+          </button>
+
+          <button id="btn-assemble-2" onclick="assembleFlowerPart(2)" disabled class="toy-btn bg-[#DBEAFE] text-[#5C3824] font-bold p-3 rounded-2xl text-left flex items-center gap-3">
+            <span class="text-2xl">✨</span>
+            <div>
+              <div class="text-sm sm:text-base">2. Gắn "táng chần" nhụy bạc</div>
+              <div class="text-xs opacity-75">Giấy thiếc bạc lấp lánh ở tâm bông hoa</div>
+            </div>
+          </button>
+
+          <button id="btn-assemble-3" onclick="assembleFlowerPart(3)" disabled class="toy-btn bg-[#E7F4D8] text-[#5C3824] font-bold p-3 rounded-2xl text-left flex items-center gap-3">
+            <span class="text-2xl">🌿</span>
+            <div>
+              <div class="text-sm sm:text-base">3. Phết hồ gắn đài & cuống tre</div>
+              <div class="text-xs opacity-75">Cố định bông hoa chắc chắn vào cành</div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <div class="mt-4 flex justify-end">
+        <button id="next-step-4" onclick="goToStep(5)" disabled class="toy-btn bg-[#8AC926] text-white font-bold px-7 py-3 rounded-2xl w-full sm:w-auto">
+          Tiếp tục sang Bước 5 ➔
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================== BƯỚC 5: CẮM LÊN CỐT RƠM / CÂY CHÔNG ==================== -->
+    <section id="screen-step-5" class="toy-panel w-full p-4 sm:p-6 hidden">
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-wider text-[#DB2777] bg-[#FCE7F3] px-3 py-1 rounded-full">Bước 5 / 5 • Lắp ráp thành cây hoa</span>
+          <h2 class="font-title text-2xl sm:text-3xl font-bold mt-1">Cắm Hoa Lên Bó Cốt Rơm ("Cây Chông")</h2>
+        </div>
+        <div class="bg-[#F4E1C1] border-2 border-[#5C3824] px-3.5 py-1.5 rounded-2xl font-bold text-sm">
+          Đã cắm: <span id="tree-bloom-count" class="text-[#DB2777] text-base">0 / 8</span> cụm hoa
+        </div>
+      </div>
+
+      <!-- Khung giải thích chi tiết của Bước 5 -->
+      <div class="lore-box p-3 sm:p-3.5 mb-3 text-xs sm:text-sm leading-relaxed">
+        <div class="font-bold text-[#5C3824] mb-0.5 flex items-center gap-1.5">
+          <span>📖</span> <span>Giải thích quy trình & ý nghĩa tâm linh:</span>
+        </div>
+        <p class="text-[#5C3824]/90">
+          Người thợ bó rơm vào thân tre tạo thành <b>"cây chông"</b>, rồi cắm các cành hoa đỏ, vàng, xanh, trắng xòe tròn rực rỡ. Mỗi cành hoa truyền thống mang triết lý <b>Tam cương</b> (3 bông lớn: Quân - Sư - Phụ) và <b>Ngũ thường</b> (5 bông nhỏ: Nhân - Lễ - Nghĩa - Trí - Tín), được người Huế dâng lên bàn thờ tổ tiên, trang ông Táo dịp Tết để cầu bình an, may mắn.
+        </p>
+      </div>
+
+      <p class="text-sm font-bold text-[#DB2777] mb-2">
+        👉 Thao tác: Chạm vào <b>các cụm hoa</b> trong khay (hoặc bấm nút Cắm nhanh) để cắm kín bó cốt rơm rực rỡ!
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-3 items-center">
+        <!-- Cây hoa giấy cắm cốt rơm (3 cột) -->
+        <div class="md:col-span-3 bg-[#FAF0D7] border-3 border-dashed border-[#9C6644] rounded-3xl p-2 flex items-center justify-center">
+          <svg id="tree-canvas" viewBox="0 0 340 285" class="w-full max-w-[310px] h-auto">
+            <!-- Cán tre & bó cốt rơm -->
+            <g stroke="#5C3824" stroke-width="3.5" stroke-linejoin="round">
+              <rect x="164" y="195" width="12" height="82" rx="5" fill="#C9A26B"/>
+              <path d="M154 232 Q170 240 186 232" fill="none" stroke="#8C5A32" stroke-width="4.5" stroke-linecap="round"/>
+              <path d="M148 135 L192 135 L186 210 L154 210 Z" fill="#E9C46A"/>
+              <line x1="160" y1="138" x2="162" y2="208" stroke="#B68D40" stroke-width="2"/>
+              <line x1="170" y1="138" x2="170" y2="208" stroke="#B68D40" stroke-width="2"/>
+              <line x1="180" y1="138" x2="178" y2="208" stroke="#B68D40" stroke-width="2"/>
+            </g>
+
+            <!-- Các nan tre xanh cắm sẵn vào cốt rơm -->
+            <g stroke="#3F702C" stroke-width="3.5" stroke-linecap="round">
+              <line x1="170" y1="140" x2="170" y2="25"/>
+              <line x1="170" y1="140" x2="112" y2="48"/>
+              <line x1="170" y1="140" x2="228" y2="48"/>
+              <line x1="170" y1="140" x2="74" y2="105"/>
+              <line x1="170" y1="140" x2="266" y2="105"/>
+              <line x1="170" y1="145" x2="95" y2="165"/>
+              <line x1="170" y1="145" x2="245" y2="165"/>
+            </g>
+
+            <!-- 8 vị trí cắm hoa lên cốt rơm (3 bông Tam Cương ở giữa + 5 cụm Ngũ Thường xung quanh) -->
+            <g id="tree-slot-0" class="cursor-pointer" onclick="placeTreeBloom(0)" transform="translate(170, 92)">
+              <circle r="24" fill="#FFFDF7" stroke="#E63946" stroke-width="3" stroke-dasharray="5 4"/>
+              <text y="4" text-anchor="middle" font-size="11" font-weight="700" fill="#E63946">Quân</text>
+            </g>
+            <g id="tree-slot-1" class="cursor-pointer" onclick="placeTreeBloom(1)" transform="translate(132, 134)">
+              <circle r="22" fill="#FFFDF7" stroke="#E63946" stroke-width="3" stroke-dasharray="5 4"/>
+              <text y="4" text-anchor="middle" font-size="11" font-weight="700" fill="#E63946">Sư</text>
+            </g>
+            <g id="tree-slot-2" class="cursor-pointer" onclick="placeTreeBloom(2)" transform="translate(208, 134)">
+              <circle r="22" fill="#FFFDF7" stroke="#E63946" stroke-width="3" stroke-dasharray="5 4"/>
+              <text y="4" text-anchor="middle" font-size="11" font-weight="700" fill="#E63946">Phụ</text>
+            </g>
+
+            <!-- 5 vị trí xung quanh -->
+            <g id="tree-slot-3" class="cursor-pointer" onclick="placeTreeBloom(3)" transform="translate(170, 38)">
+              <circle r="18" fill="#FFFDF7" stroke="#9C6644" stroke-width="2.5" stroke-dasharray="4 3"/>
+              <text y="4" text-anchor="middle" font-size="10" font-weight="700" fill="#9C6644">Nhân</text>
+            </g>
+            <g id="tree-slot-4" class="cursor-pointer" onclick="placeTreeBloom(4)" transform="translate(114, 58)">
+              <circle r="18" fill="#FFFDF7" stroke="#9C6644" stroke-width="2.5" stroke-dasharray="4 3"/>
+              <text y="4" text-anchor="middle" font-size="10" font-weight="700" fill="#9C6644">Lễ</text>
+            </g>
+            <g id="tree-slot-5" class="cursor-pointer" onclick="placeTreeBloom(5)" transform="translate(226, 58)">
+              <circle r="18" fill="#FFFDF7" stroke="#9C6644" stroke-width="2.5" stroke-dasharray="4 3"/>
+              <text y="4" text-anchor="middle" font-size="10" font-weight="700" fill="#9C6644">Nghĩa</text>
+            </g>
+            <g id="tree-slot-6" class="cursor-pointer" onclick="placeTreeBloom(6)" transform="translate(82, 108)">
+              <circle r="18" fill="#FFFDF7" stroke="#9C6644" stroke-width="2.5" stroke-dasharray="4 3"/>
+              <text y="4" text-anchor="middle" font-size="10" font-weight="700" fill="#9C6644">Trí</text>
+            </g>
+            <g id="tree-slot-7" class="cursor-pointer" onclick="placeTreeBloom(7)" transform="translate(258, 108)">
+              <circle r="18" fill="#FFFDF7" stroke="#9C6644" stroke-width="2.5" stroke-dasharray="4 3"/>
+              <text y="4" text-anchor="middle" font-size="10" font-weight="700" fill="#9C6644">Tín</text>
+            </g>
+          </svg>
+        </div>
+
+        <!-- Khay 8 cụm hoa chờ cắm lên cây chông (2 cột) -->
+        <div class="md:col-span-2 bg-[#FFF3D6] border-2 border-[#DDB892] rounded-3xl p-3 flex flex-col gap-2.5">
+          <div class="text-xs font-bold uppercase text-[#5C3824]">Khay hoa giấy Thanh Tiên</div>
+          <div id="tree-tray" class="grid grid-cols-4 md:grid-cols-3 gap-2">
+            <!-- Render bằng JS -->
+          </div>
+          <button onclick="autoPlaceTreeBloom()" id="quick-tree-btn" class="toy-btn bg-[#F4A226] text-white text-sm font-bold py-2.5 px-3 rounded-2xl mt-1">
+            ✨ Cắm nhanh cành tiếp theo
+          </button>
+        </div>
+      </div>
+
+      <div class="mt-4 flex justify-end">
+        <button id="next-step-5" onclick="showEndingScene()" disabled class="toy-btn bg-[#E65C4F] text-white font-bold px-7 py-3 rounded-2xl w-full sm:w-auto">
+          Hoàn thành & Ngắm thành quả 🎉
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================== MÀN HÌNH KẾT THÚC: CẢNH NHÂN VẬT CHIBI CƯỜI NÓI BÊN HOA GIẤY ==================== -->
+    <section id="screen-complete" class="toy-panel w-full p-4 sm:p-6 text-center hidden">
+      <div class="inline-block bg-[#E7F4D8] border-2 border-[#3F702C] text-[#2F5720] px-4 py-1 rounded-full text-xs sm:text-sm font-bold mb-1">
+        🎉 Chúc mừng bạn đã hoàn thành quy trình làm hoa giấy Thanh Tiên!
+      </div>
+      <h2 class="font-title text-2xl sm:text-4xl font-extrabold text-[#5C3824] mb-2">
+        Niềm Vui Làng Hoa Giấy Xứ Huế
+      </h2>
+
+      <!-- Minh họa khung cảnh nhà rường gỗ Huế & 3 nhân vật Chibi cầm hoa cười nói (giống ảnh 2 người dùng gửi) -->
+      <div id="ending-artwork" class="w-full max-w-2xl mx-auto rounded-3xl overflow-hidden border-3 border-[#5C3824] shadow-lg mb-4 animate-pop">
+        <svg viewBox="0 0 640 360" class="w-full h-auto block">
+          <!-- Nền trong ngôi nhà gỗ Huế ấm cúng -->
+          <rect x="0" y="0" width="640" height="360" fill="#4A2E1B"/>
+
+          <!-- Hệ cửa gỗ song thưa truyền thống Huế với ánh nắng ban mai xuyên qua -->
+          <g fill="#FDF3D7" opacity="0.92">
+            <rect x="35" y="18" width="95" height="190" rx="4"/>
+            <rect x="148" y="18" width="95" height="190" rx="4"/>
+            <rect x="261" y="18" width="95" height="190" rx="4"/>
+            <rect x="374" y="18" width="95" height="190" rx="4"/>
+            <rect x="487" y="18" width="95" height="190" rx="4"/>
+          </g>
+          <!-- Song gỗ dọc của cửa -->
+          <g fill="#3B2313">
+            <rect x="52" y="18" width="8" height="190"/><rect x="72" y="18" width="8" height="190"/><rect x="92" y="18" width="8" height="190"/><rect x="112" y="18" width="8" height="190"/>
+            <rect x="165" y="18" width="8" height="190"/><rect x="185" y="18" width="8" height="190"/><rect x="205" y="18" width="8" height="190"/><rect x="225" y="18" width="8" height="190"/>
+            <rect x="278" y="18" width="8" height="190"/><rect x="298" y="18" width="8" height="190"/><rect x="318" y="18" width="8" height="190"/><rect x="338" y="18" width="8" height="190"/>
+            <rect x="391" y="18" width="8" height="190"/><rect x="411" y="18" width="8" height="190"/><rect x="431" y="18" width="8" height="190"/><rect x="451" y="18" width="8" height="190"/>
+            <rect x="504" y="18" width="8" height="190"/><rect x="524" y="18" width="8" height="190"/><rect x="544" y="18" width="8" height="190"/><rect x="564" y="18" width="8" height="190"/>
+          </g>
+
+          <!-- Tia nắng ấm áp & làn khói hương nhẹ -->
+          <polygon points="310,20 430,20 490,260 260,260" fill="#FFF8E7" opacity="0.14"/>
+
+          <!-- Sàn chiếu cói ấm áp -->
+          <rect x="0" y="245" width="640" height="115" fill="#C69C6D"/>
+          <line x1="0" y1="245" x2="640" y2="245" stroke="#5C3824" stroke-width="4"/>
+
+          <!-- CÁC CÂY HOA GIẤY THANH TIÊN CẮM CỐT RƠM LỚN XUNG QUANH (Giống ảnh 2) -->
+          <!-- Cây hoa bên trái -->
+          <g transform="translate(88, 175)">
+            <rect x="-5" y="38" width="10" height="65" fill="#D4A373" stroke="#5C3824" stroke-width="2.5"/>
+            <path d="M-16 0 L16 0 L12 42 L-12 42 Z" fill="#E9C46A" stroke="#5C3824" stroke-width="2.5"/>
+            <circle cx="0" cy="-28" r="38" fill="#E63946" opacity="0.9"/>
+            <circle cx="-22" cy="-18" r="18" fill="#FFB703" stroke="#5C3824" stroke-width="2"/>
+            <circle cx="22" cy="-18" r="18" fill="#2563EB" stroke="#5C3824" stroke-width="2"/>
+            <circle cx="0" cy="-35" r="20" fill="#FFB703" stroke="#5C3824" stroke-width="2"/>
+            <circle cx="0" cy="-12" r="16" fill="#E63946" stroke="#5C3824" stroke-width="2"/>
+            <circle cx="0" cy="-12" r="6" fill="#FFFFFF"/>
+          </g>
+
+          <!-- Hai cây hoa cao bên phải -->
+          <g transform="translate(515, 115)">
+            <rect x="-5" y="45" width="10" height="135" fill="#D4A373" stroke="#5C3824" stroke-width="2.5"/>
+            <path d="M-18 0 L18 0 L13 48 L-13 48 Z" fill="#E9C46A" stroke="#5C3824" stroke-width="2.5"/>
+            <circle cx="0" cy="-35" r="46" fill="#E63946"/>
+            <circle cx="-24" cy="-25" r="20" fill="#FFB703" stroke="#5C3824" stroke-width="2"/>
+            <circle cx="24" cy="-25" r="20" fill="#2563EB" stroke="#5C3824" stroke-width="2"/>
+            <circle cx="0" cy="-42" r="22" fill="#FFB703" stroke="#5C3824" stroke-width="2"/>
+            <circle cx="0" cy="-15" r="18" fill="#F27999" stroke="#5C3824" stroke-width="2"/>
+          </g>
+          <g transform="translate(585, 105)">
+            <rect x="-5" y="45" width="10" height="145" fill="#D4A373" stroke="#5C3824" stroke-width="2.5"/>
+            <path d="M-18 0 L18 0 L13 48 L-13 48 Z" fill="#E9C46A" stroke="#5C3824" stroke-width="2.5"/>
+            <circle cx="0" cy="-35" r="44" fill="#FFB703"/>
+            <circle cx="-20" cy="-22" r="18" fill="#E63946" stroke="#5C3824" stroke-width="2"/>
+            <circle cx="18" cy="-35" r="20" fill="#E63946" stroke="#5C3824" stroke-width="2"/>
+            <circle cx="0" cy="-15" r="16" fill="#2563EB" stroke="#5C3824" stroke-width="2"/>
+          </g>
+
+          <!-- ==================== 3 NHÂN VẬT CHIBI CƯỜI NÓI CẦM HOA GIẤY ==================== -->
+
+          <!-- NHÂN VẬT 1 (BÊN TRÁI): Bé gái Chibi áo dài trắng, tóc thắt 2 bím buộc nơ đỏ -->
+          <g class="chibi-left-anim" transform="translate(185, 222)" stroke="#5C3824" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Thân áo dài trắng ngồi xếp bằng -->
+            <path d="M-32 76 Q-45 96 -10 98 L28 98 Q42 86 24 72 L16 32 L-18 32 Z" fill="#FFFDF9"/>
+            <!-- Tay đưa ra nâng cành hoa -->
+            <path d="M12 40 Q32 48 45 42" fill="none" stroke="#FFFDF9" stroke-width="11"/>
+            <path d="M12 40 Q32 48 45 42" fill="none" stroke="#5C3824" stroke-width="3"/>
+            <circle cx="47" cy="41" r="6" fill="#FDE2C4"/>
+            <!-- Bím tóc trái & phải với nơ đỏ -->
+            <path d="M-24 10 Q-36 30 -30 48" fill="none" stroke="#2B1D14" stroke-width="9"/>
+            <path d="M22 10 Q32 28 28 45" fill="none" stroke="#2B1D14" stroke-width="9"/>
+            <circle cx="-30" cy="44" r="5" fill="#E63946"/>
+            <circle cx="28" cy="42" r="5" fill="#E63946"/>
+            <!-- Đầu Chibi tròn dễ thương -->
+            <circle cx="0" cy="4" r="28" fill="#FDE2C4"/>
+            <!-- Tóc mái đen mượt -->
+            <path d="M-28 4 C-28 -20 28 -20 28 4 C20 -8 4 -8 -4 2 C-12 -6 -22 -4 -28 4 Z" fill="#2B1D14"/>
+            <!-- Mắt cười cong & má hồng -->
+            <path d="M-12 4 Q-8 -1 -4 4" fill="none" stroke="#5C3824" stroke-width="2.8"/>
+            <path d="M6 4 Q10 -1 14 4" fill="none" stroke="#5C3824" stroke-width="2.8"/>
+            <ellipse cx="-14" cy="11" rx="5" ry="3" fill="#F497B6" stroke="none" opacity="0.7"/>
+            <ellipse cx="14" cy="11" rx="5" ry="3" fill="#F497B6" stroke="none" opacity="0.7"/>
+            <path d="M-5 13 Q1 19 7 13" fill="none" stroke="#5C3824" stroke-width="2.5"/>
+          </g>
+
+          <!-- NHÂN VẬT 2 (Ở GIỮA): Bà/Cô nghệ nhân Chibi áo dài xanh rêu đội khăn vấn -->
+          <g class="chibi-center-anim" transform="translate(295, 208)" stroke="#5C3824" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Tà áo dài truyền thống màu xanh xám dịu -->
+            <path d="M-42 92 Q-48 112 0 112 Q48 112 42 92 L24 34 L-24 34 Z" fill="#B7B7A4"/>
+            <!-- Tay cầm cành hoa giấy giới thiệu cho bé gái -->
+            <path d="M-18 44 Q-34 56 -44 50" fill="none" stroke="#B7B7A4" stroke-width="12"/>
+            <path d="M-18 44 Q-34 56 -44 50" fill="none" stroke="#5C3824" stroke-width="3"/>
+            <circle cx="-46" cy="49" r="6.5" fill="#FDE2C4"/>
+            <path d="M16 46 Q6 60 -12 58" fill="none" stroke="#B7B7A4" stroke-width="11"/>
+            <circle cx="-14" cy="58" r="6" fill="#FDE2C4"/>
+
+            <!-- Cành hoa giấy Thanh Tiên cầm trên tay giữa 2 cô cháu -->
+            <g transform="translate(-46, 48) rotate(-18)">
+              <line x1="0" y1="22" x2="0" y2="-38" stroke="#3F702C" stroke-width="3.5"/>
+              <circle cx="0" cy="-38" r="11" fill="#E63946"/>
+              <circle cx="0" cy="-38" r="4" fill="#FFFFFF"/>
+              <circle cx="-12" cy="-22" r="9" fill="#FFB703"/>
+              <circle cx="12" cy="-24" r="9" fill="#2563EB"/>
+            </g>
+
+            <!-- Đầu Chibi & Khăn vấn Huế truyền thống -->
+            <circle cx="0" cy="4" r="29" fill="#FDE2C4"/>
+            <path d="M-29 2 C-29 -22 29 -22 29 2 Z" fill="#2B1D14"/>
+            <!-- Khăn vấn vàng kem quấn tròn trên đầu -->
+            <path d="M-31 -6 Q0 -24 31 -6 Q28 -18 0 -22 Q-28 -18 -31 -6 Z" fill="#E6CCB2"/>
+            <ellipse cx="0" cy="-14" rx="28" ry="8" fill="#DDB892"/>
+            <!-- Gương mặt hiền hậu cười tươi -->
+            <path d="M-13 5 Q-8 0 -4 5" fill="none" stroke="#5C3824" stroke-width="2.8"/>
+            <path d="M4 5 Q8 0 13 5" fill="none" stroke="#5C3824" stroke-width="2.8"/>
+            <ellipse cx="-15" cy="12" rx="5" ry="3" fill="#F497B6" stroke="none" opacity="0.75"/>
+            <ellipse cx="15" cy="12" rx="5" ry="3" fill="#F497B6" stroke="none" opacity="0.75"/>
+            <path d="M-7 14 Q0 22 7 14 Z" fill="#E65C4F"/>
+          </g>
+
+          <!-- NHÂN VẬT 3 (BÊN PHẢI): Cô nghệ nhân Chibi mặc áo hồng sen đang kết hoa -->
+          <g class="chibi-right-anim" transform="translate(425, 218)" stroke="#5C3824" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Thân áo hồng sen đậm & quần tối màu -->
+            <path d="M-36 82 Q-42 102 0 102 Q42 102 36 82 L22 34 L-22 34 Z" fill="#D94E67"/>
+            <!-- Đôi tay khéo léo nâng bó hoa vàng cam -->
+            <path d="M-18 44 Q-26 60 -10 62" fill="none" stroke="#D94E67" stroke-width="11"/>
+            <path d="M18 44 Q24 60 8 62" fill="none" stroke="#D94E67" stroke-width="11"/>
+            <circle cx="-10" cy="62" r="6" fill="#FDE2C4"/>
+            <circle cx="8" cy="62" r="6" fill="#FDE2C4"/>
+            <!-- Bó hoa giấy cầm trên tay -->
+            <g transform="translate(-2, 54)">
+              <circle cx="-8" cy="0" r="10" fill="#FFB703"/>
+              <circle cx="8" cy="-2" r="10" fill="#E63946"/>
+              <circle cx="0" cy="-9" r="9" fill="#F27999"/>
+            </g>
+
+            <!-- Đầu Chibi & búi tóc gọn gàng -->
+            <circle cx="0" cy="-26" r="11" fill="#2B1D14"/>
+            <circle cx="0" cy="4" r="28" fill="#FDE2C4"/>
+            <path d="M-28 4 C-28 -20 28 -20 28 4 C16 -8 -16 -8 -28 4 Z" fill="#2B1D14"/>
+            <path d="M-12 5 Q-8 0 -4 5" fill="none" stroke="#5C3824" stroke-width="2.8"/>
+            <path d="M4 5 Q8 0 12 5" fill="none" stroke="#5C3824" stroke-width="2.8"/>
+            <ellipse cx="-14" cy="12" rx="5" ry="3" fill="#F497B6" stroke="none" opacity="0.7"/>
+            <ellipse cx="14" cy="12" rx="5" ry="3" fill="#F497B6" stroke="none" opacity="0.7"/>
+            <path d="M-6 14 Q0 20 6 14" fill="none" stroke="#5C3824" stroke-width="2.5"/>
+          </g>
+
+          <!-- THẢM HOA GIẤY ĐỎ, VÀNG, XANH RỰC RỠ Ở TIỀN CẢNH (Giống ảnh 2) -->
+          <g stroke="#5C3824" stroke-width="2">
+            <!-- Cụm hoa đỏ bên trái dưới -->
+            <circle cx="48" cy="312" r="14" fill="#E63946"/><circle cx="72" cy="304" r="15" fill="#E63946"/>
+            <circle cx="94" cy="318" r="14" fill="#2563EB"/><circle cx="62" cy="332" r="15" fill="#E63946"/>
+            <circle cx="115" cy="336" r="14" fill="#FFB703"/><circle cx="32" cy="338" r="14" fill="#FFB703"/>
+
+            <!-- Cụm hoa vàng rực phía trước -->
+            <circle cx="165" cy="332" r="15" fill="#FFB703"/><circle cx="192" cy="326" r="16" fill="#FFB703"/>
+            <circle cx="218" cy="335" r="15" fill="#FB8500"/><circle cx="244" cy="332" r="14" fill="#FFB703"/>
+
+            <!-- Cụm hoa ngũ sắc ở giữa dưới -->
+            <circle cx="335" cy="336" r="14" fill="#E63946"/><circle cx="335" cy="336" r="5" fill="#FFFFFF"/>
+            <circle cx="364" cy="328" r="15" fill="#2563EB"/><circle cx="364" cy="328" r="5" fill="#FFFFFF"/>
+            <circle cx="394" cy="338" r="14" fill="#E63946"/><circle cx="394" cy="338" r="5" fill="#FFFFFF"/>
+            <circle cx="425" cy="330" r="15" fill="#FFB703"/>
+
+            <!-- Cụm hoa vàng rực bên phải dưới -->
+            <circle cx="515" cy="332" r="15" fill="#FFB703"/><circle cx="545" cy="324" r="16" fill="#FFB703"/>
+            <circle cx="575" cy="316" r="16" fill="#FB8500"/><circle cx="605" cy="328" r="15" fill="#FFB703"/>
+            <circle cx="562" cy="342" r="15" fill="#FFB703"/>
+          </g>
+        </svg>
+      </div>
+
+      <!-- Lời kết tóm tắt giá trị di sản -->
+      <div class="lore-box p-3.5 sm:p-4 text-left max-w-2xl mx-auto mb-5 text-xs sm:text-sm leading-relaxed">
+        <p class="font-bold text-[#5C3824] mb-1">
+          🌸 Hoa giấy Thanh Tiên – Di sản sống của đôi bàn tay người Huế
+        </p>
+        <p class="text-[#5C3824]/90">
+          Từ những ống tre lồ ô già, tờ giấy dó mỏng và màu nhuộm thảo mộc tự nhiên, qua đôi bàn tay khéo léo và tấm lòng yêu nghề của nghệ nhân làng Thanh Tiên (xã Phú Mậu, TP. Huế), từng cành hoa rực rỡ đã ra đời, mang theo ước nguyện bình an, sum vầy mỗi độ Tết đến xuân về.
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <button onclick="restartGame()" class="toy-btn bg-[#8AC926] text-white font-title text-xl font-bold px-8 py-3 rounded-2xl">
+          🔄 Chơi lại từ đầu
+        </button>
+        <button onclick="goHome()" class="toy-btn bg-[#F4E1C1] text-[#5C3824] font-title text-xl font-bold px-7 py-3 rounded-2xl">
+          🏠 Về màn hình chính
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="mt-3 text-center text-xs text-[#5C3824]/70 font-semibold">
+    Mini-game giáo dục văn hóa: Quy trình làm hoa giấy Thanh Tiên – Cố đô Huế
+  </footer>
+
+  <script>
+    /* ==================== HỆ THỐNG ÂM THANH (WEB AUDIO API) ==================== */
+    let audioCtx = null;
+    let soundEnabled = true;
+
+    // Khởi tạo và resume AudioContext ngay trong cử chỉ của người dùng
+    function ensureAudioContext() {
+      try {
+        if (!audioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (!AudioContextClass) {
+            updateAudioStatus('Trình duyệt không hỗ trợ Web Audio API', false);
+            return null;
+          }
+          audioCtx = new AudioContextClass();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume().then(() => {
+            updateAudioStatus('🔊 Âm thanh đã bật sẵn sàng!', true);
+          }).catch(() => {});
+        } else if (audioCtx.state === 'running') {
+          updateAudioStatus('🔊 Âm thanh đang hoạt động', true);
+        }
+        return audioCtx;
+      } catch (err) {
+        updateAudioStatus('Không thể khởi tạo âm thanh lúc này', false);
+        return null;
+      }
+    }
+
+    function updateAudioStatus(msg, ok) {
+      const banner = document.getElementById('audio-status-banner');
+      if (banner) {
+        banner.textContent = msg;
+        banner.className = ok
+          ? 'text-xs font-bold text-[#2F5720] mb-1 min-h-[18px]'
+          : 'text-xs font-bold text-[#B45309] mb-1 min-h-[18px]';
+      }
+    }
+
+    function syncSoundButtons() {
+      const iconTop = document.getElementById('sound-icon-top');
+      const labelTop = document.getElementById('sound-label-top');
+      const iconHome = document.getElementById('sound-icon-home');
+      const labelHome = document.getElementById('sound-label-home');
+      if (iconTop) iconTop.textContent = soundEnabled ? '🔊' : '🔇';
+      if (labelTop) labelTop.textContent = soundEnabled ? 'Test tiếng' : 'Đang tắt';
+      if (iconHome) iconHome.textContent = soundEnabled ? '🔊' : '🔇';
+      if (labelHome) labelHome.textContent = soundEnabled ? 'Bật âm thanh / Test tiếng' : 'Đã tắt âm thanh';
+    }
+
+    // Nút Bật âm thanh / Test tiếng: mở khóa AudioContext và phát âm thanh mẫu rõ ràng
+    function unlockAndTestSound() {
+      soundEnabled = true;
+      syncSoundButtons();
+      const ctx = ensureAudioContext();
+      if (!ctx) return;
+
+      const doPlayTest = () => {
+        try {
+          const now = ctx.currentTime;
+          const notes = [523.25, 659.25, 783.99];
+          notes.forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.11);
+            gain.gain.setValueAtTime(0.001, now + idx * 0.11);
+            gain.gain.exponentialRampToValueAtTime(0.28, now + idx * 0.11 + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.11 + 0.24);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + idx * 0.11);
+            osc.stop(now + idx * 0.11 + 0.25);
+          });
+          updateAudioStatus('🔊 Đã phát tiếng thử thành công!', true);
+        } catch (e) {}
+      };
+
+      if (ctx.state === 'suspended') {
+        ctx.resume().then(doPlayTest).catch(doPlayTest);
+      } else {
+        doPlayTest();
+      }
+    }
+
+    function playTone(type) {
+      if (!soundEnabled) return;
+      try {
+        const ctx = ensureAudioContext();
+        if (!ctx) return;
+
+        const trigger = () => {
+          const now = ctx.currentTime;
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+
+          if (type === 'click') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(580, now);
+            osc.frequency.exponentialRampToValueAtTime(820, now + 0.07);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+            osc.start(now);
+            osc.stop(now + 0.09);
+          } else if (type === 'whittle') {
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(280, now);
+            osc.frequency.exponentialRampToValueAtTime(560, now + 0.14);
+            gain.gain.setValueAtTime(0.25, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
+            osc.start(now);
+            osc.stop(now + 0.17);
+          } else if (type === 'dye') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(360, now);
+            osc.frequency.exponentialRampToValueAtTime(720, now + 0.2);
+            gain.gain.setValueAtTime(0.25, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+            osc.start(now);
+            osc.stop(now + 0.23);
+          } else if (type === 'snip') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(880, now);
+            osc.frequency.exponentialRampToValueAtTime(340, now + 0.09);
+            gain.gain.setValueAtTime(0.18, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+            osc.start(now);
+            osc.stop(now + 0.11);
+          } else if (type === 'press') {
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(220, now);
+            osc.frequency.exponentialRampToValueAtTime(110, now + 0.22);
+            gain.gain.setValueAtTime(0.28, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.24);
+            osc.start(now);
+            osc.stop(now + 0.25);
+          } else if (type === 'place' || type === 'chime') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(523.25, now);
+            osc.frequency.setValueAtTime(659.25, now + 0.09);
+            osc.frequency.setValueAtTime(783.99, now + 0.18);
+            gain.gain.setValueAtTime(0.24, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.34);
+            osc.start(now);
+            osc.stop(now + 0.35);
+          } else if (type === 'win') {
+            const notes = [523.25, 659.25, 783.99, 1046.5, 783.99, 1046.5];
+            notes.forEach((freq, idx) => {
+              const o = ctx.createOscillator();
+              const g = ctx.createGain();
+              o.type = 'triangle';
+              o.connect(g);
+              g.connect(ctx.destination);
+              const t0 = now + idx * 0.13;
+              o.frequency.setValueAtTime(freq, t0);
+              g.gain.setValueAtTime(0.001, t0);
+              g.gain.exponentialRampToValueAtTime(0.26, t0 + 0.02);
+              g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.36);
+              o.start(t0);
+              o.stop(t0 + 0.38);
+            });
+          }
+        };
+
+        if (ctx.state === 'suspended') {
+          ctx.resume().then(trigger).catch(trigger);
+        } else {
+          trigger();
+        }
+      } catch (e) {}
+    }
+
+    // Tự động mở khóa âm thanh ở lần chạm/nhấp đầu tiên bất kỳ trên trang
+    window.addEventListener('pointerdown', () => {
+      if (soundEnabled) ensureAudioContext();
+    }, { once: true });
+
+    function spawnParticles(x, y, emojis, count = 8) {
+      for (let i = 0; i < count; i++) {
+        const el = document.createElement('div');
+        el.className = 'particle text-lg sm:text-xl';
+        el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        el.style.left = x + 'px';
+        el.style.top = y + 'px';
+        el.style.setProperty('--dx', (Math.random() - 0.5) * 160 + 'px');
+        el.style.setProperty('--dy', (Math.random() * 110 + 30) + 'px');
+        el.style.setProperty('--rot', (Math.random() - 0.5) * 360 + 'deg');
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 950);
+      }
+    }
+
+    /* ==================== TRẠNG THÁI GAME 5 BƯỚC ==================== */
+    const state = {
+      whittleCount: 0,
+      selectedDye: 'red',
+      dyedPapers: [null, null, null, null],
+      cutCount: 0,
+      moldCount: 0,
+      assembleStage: 0,
+      treePlaced: [false, false, false, false, false, false, false, false]
+    };
+
+    const dyeStyles = {
+      red: { bg: '#E63946', text: 'Đỏ nhựa cây' },
+      yellow: { bg: '#FFB703', text: 'Vàng vỏ quả' },
+      blue: { bg: '#2563EB', text: 'Xanh lá chàm' },
+      pink: { bg: '#F27999', text: 'Hồng cánh sen' }
+    };
+
+    function showScreen(screenId) {
+      ['screen-title', 'screen-step-1', 'screen-step-2', 'screen-step-3', 'screen-step-4', 'screen-step-5', 'screen-complete']
+        .forEach(id => document.getElementById(id).classList.add('hidden'));
+      document.getElementById(screenId).classList.remove('hidden');
+
+      const topBar = document.getElementById('top-bar');
+      if (screenId === 'screen-title') {
+        topBar.classList.add('hidden');
+      } else {
+        topBar.classList.remove('hidden');
+      }
+    }
+
+    function updateProgressBar(stepNum) {
+      for (let i = 1; i <= 5; i++) {
+        const pill = document.getElementById('prog-' + i);
+        if (i < stepNum) {
+          pill.className = 'flex-1 text-center py-1 px-1 rounded-xl text-[11px] sm:text-xs font-bold transition-all bg-[#3F702C] text-white whitespace-nowrap';
+        } else if (i === stepNum) {
+          pill.className = 'flex-1 text-center py-1 px-1 rounded-xl text-[11px] sm:text-xs font-bold transition-all bg-[#8AC926] text-white shadow whitespace-nowrap';
+        } else {
+          pill.className = 'flex-1 text-center py-1 px-1 rounded-xl text-[11px] sm:text-xs font-bold transition-all text-[#5C3824]/60 whitespace-nowrap';
+        }
+      }
+    }
+
+    function startGame() {
+      ensureAudioContext();
+      playTone('chime');
+      goToStep(1);
+    }
+
+    function goHome() {
+      playTone('click');
+      showScreen('screen-title');
+    }
+
+    function goToStep(step) {
+      if (step > 1) playTone('chime');
+      updateProgressBar(step);
+      showScreen('screen-step-' + step);
+      if (step === 5) {
+        renderTreeTray();
+      }
+    }
+
+    /* ==================== BƯỚC 1: VÓT TRE ==================== */
+    (function initStep1() {
+      const zone = document.getElementById('bamboo-zone');
+      const knife = document.getElementById('whittle-knife');
+      let isDragging = false;
+      let lastTime = 0;
+
+      function doWhittle(clientX, clientY) {
+        if (state.whittleCount >= 3) return;
+        const now = Date.now();
+        if (now - lastTime < 300) return;
+        lastTime = now;
+
+        state.whittleCount++;
+        playTone('whittle');
+        spawnParticles(clientX, clientY, ['🎋', '🍃', '✨'], 7);
+        document.getElementById('bamboo-count').textContent = `${state.whittleCount} / 3`;
+
+        const raw = document.getElementById('raw-bamboo');
+        const finished = document.getElementById('finished-bamboo');
+        raw.classList.remove('animate-shake');
+        void raw.offsetWidth;
+        raw.classList.add('animate-shake');
+
+        if (state.whittleCount === 1) {
+          document.getElementById('splinter-left').setAttribute('opacity', '1');
+          finished.setAttribute('opacity', '0.5');
+        } else if (state.whittleCount === 2) {
+          document.getElementById('splinter-right').setAttribute('opacity', '1');
+          finished.setAttribute('opacity', '0.8');
+        } else if (state.whittleCount >= 3) {
+          raw.setAttribute('opacity', '0.35');
+          finished.setAttribute('opacity', '1');
+          document.getElementById('swipe-guide-1').textContent = '✅ Đã vót xong bó nan tre dẻo dai!';
+          const nextBtn = document.getElementById('next-step-1');
+          nextBtn.disabled = false;
+          nextBtn.classList.add('animate-hint');
+        }
+      }
+
+      zone.addEventListener('pointerdown', (e) => {
+        isDragging = true;
+        doWhittle(e.clientX, e.clientY);
+      });
+
+      zone.addEventListener('pointermove', (e) => {
+        if (!isDragging) return;
+        const rect = zone.getBoundingClientRect();
+        const x = Math.max(10, Math.min(rect.width - 105, e.clientX - rect.left - 48));
+        const y = Math.max(10, Math.min(rect.height - 65, e.clientY - rect.top - 28));
+        knife.style.left = x + 'px';
+        knife.style.top = y + 'px';
+        knife.style.right = 'auto';
+        knife.style.bottom = 'auto';
+
+        if (x > rect.width * 0.22 && x < rect.width * 0.65) {
+          doWhittle(e.clientX, e.clientY);
+        }
+      });
+
+      window.addEventListener('pointerup', () => { isDragging = false; });
+    })();
+
+    /* ==================== BƯỚC 2: NHUỘM MÀU ==================== */
+    function selectDye(key) {
+      state.selectedDye = key;
+      playTone('place');
+      ['red', 'yellow', 'blue', 'pink'].forEach(k => {
+        const btn = document.getElementById('dye-btn-' + k);
+        if (k === key) {
+          btn.classList.add('ring-4', 'ring-[#5C3824]', 'scale-105');
+        } else {
+          btn.classList.remove('ring-4', 'ring-[#5C3824]', 'scale-105');
+        }
+      });
+    }
+
+    function dyePaper(idx) {
+      const sheet = document.getElementById('paper-sheet-' + idx);
+      const st = dyeStyles[state.selectedDye];
+      state.dyedPapers[idx] = state.selectedDye;
+
+      sheet.style.backgroundColor = st.bg;
+      sheet.style.color = '#FFFFFF';
+      sheet.innerHTML = `<span class="text-xl mb-0.5">🌸</span><span class="text-xs font-bold text-center drop-shadow">${st.text}</span>`;
+      sheet.classList.remove('animate-pop');
+      void sheet.offsetWidth;
+      sheet.classList.add('animate-pop');
+
+      const rect = sheet.getBoundingClientRect();
+      playTone('dye');
+      spawnParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, ['💧', '🎨', '✨'], 6);
+
+      const count = state.dyedPapers.filter(Boolean).length;
+      document.getElementById('dye-count').textContent = `${count} / 4`;
+      if (count >= 4) {
+        const nextBtn = document.getElementById('next-step-2');
+        nextBtn.disabled = false;
+        nextBtn.classList.add('animate-hint');
+      }
+    }
+
+    /* ==================== BƯỚC 3: CẮT & ÉP KHUÔN GỖ ==================== */
+    function performCut() {
+      if (state.cutCount >= 2) return;
+      state.cutCount++;
+      playTone('snip');
+
+      const btn = document.getElementById('scissors-tool');
+      const rect = btn.getBoundingClientRect();
+      spawnParticles(rect.left + rect.width / 2, rect.top, ['✂️', '🌸', '✨'], 6);
+      document.getElementById('cut-progress').textContent = `${state.cutCount}/2`;
+
+      if (state.cutCount === 1) {
+        document.getElementById('cut-guide-path').setAttribute('stroke', '#FFB703');
+        document.getElementById('cut-guide-path').setAttribute('stroke-width', '5');
+      } else if (state.cutCount >= 2) {
+        document.getElementById('uncut-paper-group').classList.add('hidden');
+        const cutPetal = document.getElementById('cut-petal-group');
+        cutPetal.classList.remove('hidden');
+        cutPetal.classList.add('animate-pop');
+
+        btn.classList.add('hidden');
+        document.getElementById('mold-tool').classList.remove('hidden');
+        document.getElementById('mold-status-badge').textContent = '3B: Ép khuôn gỗ';
+        document.getElementById('step3-instruction').innerHTML =
+          '👉 Thao tác 3B: Bấm <b>ép khuôn gỗ</b> 2 lần để tạo đường gân & độ phồng tự nhiên cho cánh hoa!';
+      }
+    }
+
+    function performPressMold() {
+      if (state.moldCount >= 2) return;
+      state.moldCount++;
+      playTone('press');
+
+      const btn = document.getElementById('mold-tool');
+      const rect = btn.getBoundingClientRect();
+      spawnParticles(rect.left + rect.width / 2, rect.top, ['🪵', '✨', '🌺'], 7);
+      document.getElementById('mold-progress').textContent = `${state.moldCount}/2`;
+
+      const ribs = document.getElementById('embossed-ribs');
+      if (state.moldCount === 1) {
+        ribs.setAttribute('opacity', '0.5');
+      } else if (state.moldCount >= 2) {
+        ribs.setAttribute('opacity', '1');
+        btn.innerHTML = '<span>✅ Đã ép khuôn tạo gân hoàn chỉnh!</span>';
+        btn.classList.remove('animate-hint');
+        btn.disabled = true;
+
+        const nextBtn = document.getElementById('next-step-3');
+        nextBtn.disabled = false;
+        nextBtn.classList.add('animate-hint');
+      }
+    }
+
+    /* ==================== BƯỚC 4: GHÉP BÔNG & TÁNG CHẦN NHỤY BẠC ==================== */
+    function assembleFlowerPart(stage) {
+      if (stage !== state.assembleStage + 1) return;
+      state.assembleStage = stage;
+      playTone('place');
+
+      const btn = document.getElementById('btn-assemble-' + stage);
+      const rect = btn.getBoundingClientRect();
+      spawnParticles(rect.left + rect.width / 2, rect.top, ['🌸', '✨'], 6);
+      btn.classList.remove('animate-hint');
+      btn.disabled = true;
+
+      document.getElementById('bloom-assemble-count').textContent = `${stage} / 3`;
+
+      if (stage === 1) {
+        document.getElementById('layer-outer-petals').setAttribute('opacity', '1');
+        document.getElementById('layer-inner-petals').setAttribute('opacity', '1');
+        const next = document.getElementById('btn-assemble-2');
+        next.disabled = false;
+        next.classList.add('animate-hint');
+      } else if (stage === 2) {
+        document.getElementById('layer-silver-stamen').setAttribute('opacity', '1');
+        const next = document.getElementById('btn-assemble-3');
+        next.disabled = false;
+        next.classList.add('animate-hint');
+      } else if (stage === 3) {
+        document.getElementById('flower-calyx').setAttribute('opacity', '1');
+        const nextStep = document.getElementById('next-step-4');
+        nextStep.disabled = false;
+        nextStep.classList.add('animate-hint');
+      }
+    }
+
+    /* ==================== BƯỚC 5: CẮM LÊN CỐT RƠM / CÂY CHÔNG ==================== */
+    const treeBloomConfigs = [
+      { radius: 24, outer: '#E63946', inner: '#2563EB', label: 'Quân' },
+      { radius: 22, outer: '#FFB703', inner: '#FB8500', label: 'Sư' },
+      { radius: 22, outer: '#E63946', inner: '#F27999', label: 'Phụ' },
+      { radius: 17, outer: '#E63946', inner: '#F8FAFC', label: 'Nhân' },
+      { radius: 17, outer: '#2563EB', inner: '#F8FAFC', label: 'Lễ' },
+      { radius: 17, outer: '#FFB703', inner: '#F8FAFC', label: 'Nghĩa' },
+      { radius: 17, outer: '#2A9D8F', inner: '#F8FAFC', label: 'Trí' },
+      { radius: 17, outer: '#F27999', inner: '#F8FAFC', label: 'Tín' }
+    ];
+
+    function buildMiniBloomSVG(cfg) {
+      const r = cfg.radius;
+      return `
+        <g class="animate-pop">
+          <circle cx="0" cy="${-r * 0.45}" r="${r * 0.48}" fill="${cfg.outer}" stroke="#5C3824" stroke-width="2.2"/>
+          <circle cx="${r * 0.43}" cy="${-r * 0.14}" r="${r * 0.48}" fill="${cfg.outer}" stroke="#5C3824" stroke-width="2.2"/>
+          <circle cx="${r * 0.27}" cy="${r * 0.38}" r="${r * 0.48}" fill="${cfg.outer}" stroke="#5C3824" stroke-width="2.2"/>
+          <circle cx="${-r * 0.27}" cy="${r * 0.38}" r="${r * 0.48}" fill="${cfg.outer}" stroke="#5C3824" stroke-width="2.2"/>
+          <circle cx="${-r * 0.43}" cy="${-r * 0.14}" r="${r * 0.48}" fill="${cfg.outer}" stroke="#5C3824" stroke-width="2.2"/>
+          <circle cx="0" cy="0" r="${r * 0.36}" fill="${cfg.inner}" stroke="#5C3824" stroke-width="2"/>
+          <circle cx="0" cy="0" r="${r * 0.16}" fill="#F8FAFC"/>
+        </g>
+      `;
+    }
+
+    function renderTreeTray() {
+      const tray = document.getElementById('tree-tray');
+      tray.innerHTML = '';
+      treeBloomConfigs.forEach((cfg, idx) => {
+        const placed = state.treePlaced[idx];
+        const btn = document.createElement('button');
+        btn.disabled = placed;
+        btn.onclick = () => placeTreeBloom(idx);
+        btn.className = `toy-btn bg-white p-1.5 rounded-2xl flex flex-col items-center justify-center ${placed ? 'opacity-30' : 'hover:scale-105'}`;
+        btn.innerHTML = `
+          <svg viewBox="-28 -28 56 56" class="w-9 h-9">
+            ${buildMiniBloomSVG({ ...cfg, radius: 19 })}
+          </svg>
+          <span class="text-[10px] font-bold text-[#5C3824] mt-0.5">${cfg.label}</span>
+        `;
+        tray.appendChild(btn);
+      });
+    }
+
+    function placeTreeBloom(idx) {
+      if (state.treePlaced[idx]) {
+        const nextFree = state.treePlaced.findIndex(v => !v);
+        if (nextFree === -1) return;
+        idx = nextFree;
+      }
+      state.treePlaced[idx] = true;
+      const slot = document.getElementById('tree-slot-' + idx);
+      slot.innerHTML = buildMiniBloomSVG(treeBloomConfigs[idx]);
+      playTone('place');
+
+      const rect = slot.getBoundingClientRect();
+      spawnParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, ['🌺', '🌼', '✨'], 5);
+
+      const doneCount = state.treePlaced.filter(Boolean).length;
+      document.getElementById('tree-bloom-count').textContent = `${doneCount} / 8`;
+      renderTreeTray();
+
+      if (doneCount >= 8) {
+        document.getElementById('quick-tree-btn').disabled = true;
+        const nextBtn = document.getElementById('next-step-5');
+        nextBtn.disabled = false;
+        nextBtn.classList.add('animate-hint');
+      }
+    }
+
+    function autoPlaceTreeBloom() {
+      const idx = state.treePlaced.findIndex(v => !v);
+      if (idx !== -1) placeTreeBloom(idx);
+    }
+
+    /* ==================== MÀN HÌNH KẾT THÚC ==================== */
+    function showEndingScene() {
+      updateProgressBar(6);
+      showScreen('screen-complete');
+      playTone('win');
+
+      const art = document.getElementById('ending-artwork').getBoundingClientRect();
+      spawnParticles(art.left + art.width / 2, art.top + 80, ['🌸', '🌼', '🌺', '🎉', '✨'], 20);
+    }
+
+    function restartGame() {
+      state.whittleCount = 0;
+      state.selectedDye = 'red';
+      state.dyedPapers = [null, null, null, null];
+      state.cutCount = 0;
+      state.moldCount = 0;
+      state.assembleStage = 0;
+      state.treePlaced = [false, false, false, false, false, false, false, false];
+
+      // Reset Bước 1
+      document.getElementById('bamboo-count').textContent = '0 / 3';
+      document.getElementById('raw-bamboo').setAttribute('opacity', '1');
+      document.getElementById('finished-bamboo').setAttribute('opacity', '0.25');
+      document.getElementById('splinter-left').setAttribute('opacity', '0.35');
+      document.getElementById('splinter-right').setAttribute('opacity', '0.35');
+      document.getElementById('swipe-guide-1').textContent = '↔ Vuốt ngang qua thân tre để vót nan';
+      const n1 = document.getElementById('next-step-1');
+      n1.disabled = true; n1.classList.remove('animate-hint');
+
+      // Reset Bước 2
+      document.getElementById('dye-count').textContent = '0 / 4';
+      [0, 1, 2, 3].forEach(i => {
+        const s = document.getElementById('paper-sheet-' + i);
+        s.style.backgroundColor = '#FFFFFF';
+        s.style.color = '#5C3824';
+        s.innerHTML = `<span class="text-xl mb-0.5">📄</span><span class="text-xs font-bold text-center">Tờ giấy ${i + 1}</span>`;
+      });
+      const n2 = document.getElementById('next-step-2');
+      n2.disabled = true; n2.classList.remove('animate-hint');
+
+      // Reset Bước 3
+      document.getElementById('cut-progress').textContent = '0/2';
+      document.getElementById('uncut-paper-group').classList.remove('hidden');
+      document.getElementById('cut-petal-group').classList.add('hidden');
+      document.getElementById('embossed-ribs').setAttribute('opacity', '0');
+      document.getElementById('scissors-tool').classList.remove('hidden');
+      const moldTool = document.getElementById('mold-tool');
+      moldTool.classList.add('hidden');
+      moldTool.disabled = false;
+      moldTool.classList.add('animate-hint');
+      moldTool.innerHTML = '<span class="text-xl">🪵</span><span>Ép khuôn gỗ tạo nếp (<span id="mold-progress">0/2</span>)</span>';
+      document.getElementById('mold-status-badge').textContent = '3A: Cắt cánh hoa';
+      document.getElementById('step3-instruction').innerHTML = '👉 Thao tác 3A: Bấm vào <b>chiếc kéo</b> 2 lần để cắt cánh hoa theo đường nét đứt!';
+      const n3 = document.getElementById('next-step-3');
+      n3.disabled = true; n3.classList.remove('animate-hint');
+
+      // Reset Bước 4
+      document.getElementById('bloom-assemble-count').textContent = '0 / 3';
+      document.getElementById('layer-outer-petals').setAttribute('opacity', '0.25');
+      document.getElementById('layer-inner-petals').setAttribute('opacity', '0');
+      document.getElementById('layer-silver-stamen').setAttribute('opacity', '0');
+      document.getElementById('flower-calyx').setAttribute('opacity', '0.25');
+      const b1 = document.getElementById('btn-assemble-1');
+      const b2 = document.getElementById('btn-assemble-2');
+      const b3 = document.getElementById('btn-assemble-3');
+      b1.disabled = false; b1.classList.add('animate-hint');
+      b2.disabled = true; b2.classList.remove('animate-hint');
+      b3.disabled = true; b3.classList.remove('animate-hint');
+      const n4 = document.getElementById('next-step-4');
+      n4.disabled = true; n4.classList.remove('animate-hint');
+
+      // Reset Bước 5
+      document.getElementById('tree-bloom-count').textContent = '0 / 8';
+      treeBloomConfigs.forEach((cfg, idx) => {
+        const isBig = idx < 3;
+        document.getElementById('tree-slot-' + idx).innerHTML = `
+          <circle r="${isBig ? 23 : 18}" fill="#FFFDF7" stroke="${isBig ? '#E63946' : '#9C6644'}" stroke-width="${isBig ? 3 : 2.5}" stroke-dasharray="4 3"/>
+          <text y="4" text-anchor="middle" font-size="${isBig ? 11 : 10}" font-weight="700" fill="${isBig ? '#E63946' : '#9C6644'}">${cfg.label}</text>
+        `;
+      });
+      document.getElementById('quick-tree-btn').disabled = false;
+      const n5 = document.getElementById('next-step-5');
+      n5.disabled = true; n5.classList.remove('animate-hint');
+
+      goToStep(1);
+    }
+  </script>
+</body>
+</html>
